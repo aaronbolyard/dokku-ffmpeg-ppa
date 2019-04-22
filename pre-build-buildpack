@@ -8,6 +8,7 @@ echo "-----> Installing FFMPEG."
 COMMAND=$(cat <<EOF
 export DEBIAN_FRONTEND=noninteractive
 apt-get remove -y ffmpeg
+add-apt-repository --remove -y ppa:mc3man/trusty-media
 add-apt-repository -y ppa:jonathonf/ffmpeg-4
 apt-get update -y
 apt-get install -y ffmpeg
