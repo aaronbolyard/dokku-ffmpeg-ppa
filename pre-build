@@ -1,0 +1,21 @@
+#!/bin/bash -e
+set -e
+
+APP="$1"; IMAGE="dokku/$APP"
+echo "-> Installing FFMPEG..."
+
+COMMAND=$(cat <<EOF
+export DEBIAN_FRONTEND=noninteractive
+sudo add-apt-repository -y ppa:jonathonf/ffmpeg-4
+sudo apt-get update -y
+sudo apt-get install -y ffmpeg
+echo "-> Installed FFMPEG."
+sleep 1 # Kind of hacky but wait for Docker.
+EOF
+)
+
+ID=$(docker run -d $IMAGE /bin/bash -e -c "$COMMAND")
+
+docker attach $ID
+test $(docker wait $ID) -eq 0
+docker commit $ID $IMAGE > /dev/null
